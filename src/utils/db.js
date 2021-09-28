@@ -5,7 +5,11 @@
 
 // connection pool for postgresql
 
-const {DATABASE_URL:connectionString} = process.env;
+const {DATABASE_URL:connectionString,NODE_ENV} = process.env;
+
+const isProduction = NODE_ENV==='production';
+
+console.log({isProduction})
 
 const pool = new pg.Pool({
   connectionString,
