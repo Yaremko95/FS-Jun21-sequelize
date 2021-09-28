@@ -5,7 +5,20 @@ const route = Router()
 
 route.get("/",async(req,res,next)=>{
     try {
-        const query = `SELECT * FROM authors;`
+        const query = 
+        `SELECT 
+        book.book_id,
+        book.name AS book_name,
+        book.description,
+        book.price,
+        book.author,
+        author.name AS author_name,
+        author.last_name,
+        author.country,
+        author.avatar
+    FROM books as book
+    INNER JOIN authors AS author ON book.author = author.author_id
+    `
         const result = await pool.query(query)
         res.send(result.rows)
     } catch (error) {
@@ -15,18 +28,25 @@ route.get("/",async(req,res,next)=>{
 
 route.get("/:id",async(req,res,next)=>{
     try {
-        const query = `SELECT * FROM authors WHERE author_id=${req.params.id};`
-      
+        const query = `SELECT 
+        book.book_id,
+        book.name AS book_name,
+        book.description,
+        book.price,
+        book.author,
+        author.name AS author_name,
+        author.last_name,
+        author.country,
+        author.avatar
+    FROM books as book
+    INNER JOIN authors AS author ON book.author = author.author_id
+    WHERE book_id=${req.params.id};`
         const result = await pool.query(query)
         if(result.rows.length > 0){
-            const author = result.rows[0]
-            const booksQuery = `SELECT * FROM books WHERE author=${req.params.id};`
-            const booksResult = await pool.query(booksQuery)
-            const books = booksResult.rows
-            res.send({author,books})
+            res.send(result.rows[0])
         }
         else{
-            res.status(404).send({message:`Author with ${req.params.id} is not found.`})
+            res.status(404).send({message:`Book with ${req.params.id} is not found.`})
         }
     } catch (error) {
         res.status(500).send(error)
@@ -35,7 +55,7 @@ route.get("/:id",async(req,res,next)=>{
 
 route.delete("/:id",async(req,res,next)=>{
     try {
-        const query = `DELETE FROM authors WHERE author_id=${req.params.id};`
+        const query = `DELETE FROM books WHERE book_id=${req.params.id};`
         await pool.query(query)
         res.status(204).send()
     } catch (error) {
@@ -45,14 +65,14 @@ route.delete("/:id",async(req,res,next)=>{
 
 route.put("/:id",async(req,res,next)=>{
     try {
-        const {name,last_name,avatar,country} = req.body;
+        const {name,description ,price,author} = req.body;
         const query =`
-            UPDATE authors 
+            UPDATE books 
             SET 
                 name=${"'"+name+"'"},
-                last_name=${"'"+last_name+"'"},
-                avatar=${"'"+avatar+"'"},
-                country=${"'"+country+"'"},
+                description=${"'"+description+"'"},
+                price=${"'"+price+"'"},
+                author=${"'"+author+"'"},
                 updated_at= NOW()
             WHERE author_id=${req.params.id}
             RETURNING*;`
@@ -65,21 +85,21 @@ route.put("/:id",async(req,res,next)=>{
 
 route.post("/",async(req,res,next)=>{
     try {
-        const {name,last_name,avatar,country} = req.body;
+        const {name,description,price,author} = req.body;
         const query =`
-        INSERT INTO authors
+        INSERT INTO books
         (
             name,
-            last_name,
-            avatar,
-            country
+            description,
+            price,
+            author
         )
         VALUES 
         (
             ${"'"+name+"'"},
-            ${"'"+last_name+"'"},
-            ${"'"+avatar+"'"},
-            ${"'"+country+"'"}
+            ${"'"+description+"'"},
+            ${"'"+price+"'"},
+            ${"'"+author+"'"}
         ) RETURNING *;
         `
         const result = await pool.query(query)

@@ -10,7 +10,19 @@ const query = `
             avatar TEXT NOT NULL,
             created_at TIMESTAMPTZ DEFAULT NOW(),
             updated_at TIMESTAMPTZ DEFAULT NOW()
-        )
+        );
+
+    -- DROP TABLE IF EXISTS books;
+    CREATE TABLE IF NOT EXISTS
+        books(
+            book_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            name VARCHAR (100) NOT NULL,
+            description TEXT NOT NULL,
+            price FLOAT NOT NULL,
+            author INTEGER NOT NULL REFERENCES authors(author_id) ON DELETE CASCADE,
+            created_at TIMESTAMPTZ DEFAULT NOW(),
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
 `
 
 const createTables = async () => {
@@ -18,6 +30,7 @@ const createTables = async () => {
      await pool.query(query)
      console.log('Default tables are created ✅')
     } catch (error) {
+     console.log(error)
       console.log('Default tables are not created ❌')
     }
 }

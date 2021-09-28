@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors"
 import createTables from "./utils/create-tables.js";
 import authorsRoute from "./services/authors/routes.js"
+import booksRoute from "./services/books/routes.js"
 
 const server = express()
 
@@ -13,6 +14,8 @@ server.use(cors())
 server.use(express.json())
 
 server.use("/authors", authorsRoute)
+
+server.use("/books", booksRoute)
 
 server.listen(PORT,async ()=>{
     console.log(`Server is listening on port ${PORT}`)
