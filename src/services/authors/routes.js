@@ -9,6 +9,7 @@ route.get("/",async(req,res,next)=>{
         const result = await pool.query(query)
         res.send(result.rows)
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 })
@@ -29,6 +30,7 @@ route.get("/:id",async(req,res,next)=>{
             res.status(404).send({message:`Author with ${req.params.id} is not found.`})
         }
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 })
@@ -39,6 +41,7 @@ route.delete("/:id",async(req,res,next)=>{
         await pool.query(query)
         res.status(204).send()
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 })
@@ -59,6 +62,7 @@ route.put("/:id",async(req,res,next)=>{
         const result = await pool.query(query)
         res.send(result.rows[0])
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 })
@@ -85,6 +89,7 @@ route.post("/",async(req,res,next)=>{
         const result = await pool.query(query)
         res.status(201).send(result.rows[0])
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 })
