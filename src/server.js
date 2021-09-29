@@ -1,29 +1,20 @@
 import express from "express";
-import cors from "cors"
-import createTables from "./utils/create-tables.js";
-import authorsRoute from "./services/authors/routes.js"
-import booksRoute from "./services/books/routes.js"
+import cors from "cors";
+import { connectDB } from "./db/index.js";
+import Author from "./db/models/authors.js";
+const server = express();
 
-const server = express()
+const { PORT = 5000 } = process.env;
 
+server.use(cors());
 
-const {PORT=5000} = process.env;
+server.use(express.json());
 
-server.use(cors())
+server.listen(PORT, async () => {
+  await connectDB();
+  console.log(`Server is listening on port ${PORT}`);
+});
 
-server.use(express.json())
-
-server.use("/authors", authorsRoute)
-
-server.use("/books", booksRoute)
-
-server.listen(PORT,async ()=>{
-    console.log(`Server is listening on port ${PORT}`)
-    await createTables()
-})
-
-server.on('error',(error)=>{
-    console.log('Server is stoppped ',error)
-})
-
-
+server.on("error", (error) => {
+  console.log("Server is stoppped ", error);
+});
