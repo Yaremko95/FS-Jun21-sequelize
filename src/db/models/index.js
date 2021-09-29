@@ -10,7 +10,7 @@ import Author from "./authors.js";
 //3. understand for each association which model is TARGET & which model is SOURCE
 // A.hasMany(B) => foreign key in the the TARGET B model
 
-Author.hasMany(Article); // => authorId
-Article.belongsTo(Author);
+Author.hasMany(Article); // => authorId  Author.findAll({include: Article})
+Article.belongsTo(Author); // => Article.findAll({include:Author})
 
 export default { Article, Author };

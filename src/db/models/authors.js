@@ -22,6 +22,11 @@ const Author = sequelize.define(
     age: {
       type: DataTypes.INTEGER,
     },
+    image: {
+      type: DataTypes.STRING,
+      defaultValue: "https://image.url",
+    },
+
     email: {
       type: DataTypes.STRING,
       allowNull: false,

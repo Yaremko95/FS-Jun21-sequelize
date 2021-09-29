@@ -9,7 +9,7 @@ const Article = sequelize.define("article", {
     autoIncrement: true,
   },
   title: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   category: {
