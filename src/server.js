@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./db/index.js";
-import Author from "./db/models/authors.js";
+import db from "./db/models/index.js";
 const server = express();
 
 const { PORT = 5000 } = process.env;
