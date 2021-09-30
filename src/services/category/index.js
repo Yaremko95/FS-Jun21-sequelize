@@ -1,14 +1,12 @@
 import express from "express";
 import db from "../../db/models/index.js";
 const router = express.Router();
-const { Article, Author, Category, ArticleCategory } = db;
+const { Article, Author, Category } = db;
 router
   .route("/")
   .get(async (req, res, next) => {
     try {
-      const data = await Article.findAll({
-        include: [Author, { model: Category, through: { attributes: [] } }],
-      });
+      const data = await Category.findAll();
       res.send(data);
     } catch (error) {
       console.log(error);
@@ -17,7 +15,11 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const data = await Article.create(req.body);
+      const data = await Category.bulkCreate([
+        { categoryName: "db" },
+        { categoryName: "sql" },
+        { categoryName: "react" },
+      ]);
       res.send(data);
     } catch (error) {
       console.log(error);
@@ -48,14 +50,5 @@ router
       next(error);
     }
   });
-
-router.route("/addCategory").post(async (req, res, next) => {
-  try {
-    const data = await ArticleCategory.create(req.body);
-    res.send(data);
-  } catch (error) {
-    console.log(error);
-  }
-});
 
 export default router;

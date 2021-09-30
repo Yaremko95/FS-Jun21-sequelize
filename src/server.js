@@ -4,7 +4,7 @@ import { connectDB } from "./db/index.js";
 import authorsRouter from "./services/authors/index.js";
 import articlesRouter from "./services/articles/index.js";
 import reviewsRouter from "./services/reviews/index.js";
-
+import categoriesRouter from "./services/category/index.js";
 const server = express();
 
 const { PORT = 5000 } = process.env;
@@ -16,6 +16,8 @@ server.use(express.json());
 server.use("/authors", authorsRouter);
 server.use("/articles", articlesRouter);
 server.use("/reviews", reviewsRouter);
+server.use("/categories", categoriesRouter);
+
 server.listen(PORT, async () => {
   await connectDB();
   console.log(`Server is listening on port ${PORT}`);

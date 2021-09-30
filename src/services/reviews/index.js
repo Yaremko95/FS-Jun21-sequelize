@@ -1,9 +1,10 @@
 import express from "express";
 import db from "../../db/models/index.js";
 import sequelize from "sequelize";
+
 const { Op } = sequelize;
 const router = express.Router();
-const { Review, Article, Author } = db;
+const { Review, Article, Author, Category } = db;
 
 router
   .route("/")
@@ -20,6 +21,7 @@ router
         include: [
           {
             model: Article,
+            include: { model: Category, through: { attributes: [] } },
             attributes: { exclude: ["createdAt"] },
             where: req.query.title
               ? {

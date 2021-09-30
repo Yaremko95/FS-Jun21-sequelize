@@ -12,10 +12,6 @@ const Article = sequelize.define("article", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  category: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
 });
 
 export default Article;
