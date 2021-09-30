@@ -59,8 +59,15 @@ router
   .route("/:id")
   .get(async (req, res, next) => {
     try {
-      const data = await Author.findByPk(req.params.id);
-      res.send(data);
+      const data = await Author.findOne({
+        where: { id: req.params.id },
+        include: Article,
+      });
+      if (data) {
+        res.send(data);
+      } else {
+        res.status(404).send("Not found");
+      }
     } catch (error) {
       console.log(error);
       next(error);
