@@ -50,6 +50,36 @@ router
     }
   });
 
+router.route("/stats").get(async (req, res, next) => {
+  try {
+    // group reviews by author
+    // select r.author_id, a.name, count(*) from reviews as r left join authors as a on r.author_id=a.id  group by author_id , a.id
+
+    const reviewsByAuthor = await Review.findAll({
+      include: Author,
+      attributes: [
+        "author_id",
+        [sequelize.fn("COUNT", sequelize.col("review.id")), "total_reviews"],
+      ],
+      group: ["author_id", "author.id"],
+    });
+
+    //get AVG rate of each article
+    const avgArticleRate = await Review.findAll({
+      include: Article,
+      attributes: [
+        "articleId",
+        [sequelize.fn("AVG", sequelize.col("rate")), "avarage_rate"],
+      ],
+      group: ["articleId", "article.id"],
+    });
+
+    res.send({ avgArticleRate });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router
   .route("/:id")
   .get(async (req, res, next) => {
