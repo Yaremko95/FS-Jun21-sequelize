@@ -21,8 +21,18 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const data = await Article.create(req.body);
-      res.send(data);
+      const { categoryId, ...rest } = req.body;
+      const article = await Article.create(rest);
+      //mixin method when you don't define the model
+      //const result = await article.addCategory([categoryId]);
+
+      // when you define model
+      const articleCategory = await ArticleCategory.create({
+        categoryId,
+        articleId: article.id,
+      });
+
+      res.send({ article, articleCategory });
     } catch (error) {
       console.log(error);
       next(error);
